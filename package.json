@@ -1,0 +1,22 @@
+{
+  "name": "serial-number",
+  "version": "0.1.0",
+  "description": "Reads the machine's serial number (or service/asset tag)",
+  "author": {
+    "name": "Elan Shanker",
+    "url": "http://github.com/es128"
+  },
+  "homepage": "https://github.com/es128/serial-number",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:es128/serial-number.git"
+  },
+  "bugs": {
+    "url": "https://github.com/es128/serial-number/issues"
+  },
+  "main": "./index",
+  "keywords": [
+    "serial", "number", "serial-number", "asset", "service", "tag", "machine", "hardware", "dell"
+  ],
+  "dependencies": {}
+}
