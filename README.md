@@ -26,6 +26,12 @@ getSerial(function (value) {
 ```
 
 
+To-Do
+-----
+Linux/FreeBSD support. I am aware of the `dmidecode` command, but need to do
+something to deal with the fact that it can only be run as *root*.
+
+
 License
 -------
 MIT
