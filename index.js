@@ -5,8 +5,7 @@ var exec = require('child_process').exec;
 module.exports = function (cb) {
 	var delimiter = ': ',
 		stdoutHandler = function (error, stdout) {
-		if (error !== null) {throw error;}
-		cb(stdout.slice(stdout.indexOf(delimiter) + 2));
+		cb(error, stdout.slice(stdout.indexOf(delimiter) + 2));
 	};
 
 	switch (process.platform) {

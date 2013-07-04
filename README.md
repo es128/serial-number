@@ -20,7 +20,7 @@ to a callback.
 var getSerial = require('serial-number'),
     mySerialNumber;
 
-getSerial(function (value) {
+getSerial(function (err, value) {
 	mySerialNumber = value;
 });
 ```
