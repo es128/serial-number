@@ -18,5 +18,10 @@ module.exports = function (cb) {
 		delimiter = '\r\n';
 		exec('wmic csproduct get identifyingnumber', stdoutHandler);
 		break;
+
+	case 'linux':
+	case 'freebsd':
+		exec('dmidecode -t system | grep \'Serial\'', stdoutHandler)
+		break;
 	}
 };
