@@ -21,7 +21,7 @@ module.exports = function (cb) {
 
 	case 'linux':
 	case 'freebsd':
-		exec('dmidecode -t system | grep \'Serial\'', stdoutHandler)
+		exec('dmidecode -t system | grep \'Serial\'', stdoutHandler);
 		break;
 	}
 };
