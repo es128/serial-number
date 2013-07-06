@@ -3,8 +3,8 @@
 var exec = require('child_process').exec;
 
 module.exports = function (cb) {
-	var delimiter = ': ',
-		stdoutHandler = function (error, stdout) {
+	var delimiter = ': ';
+	var stdoutHandler = function (error, stdout) {
 		cb(error, stdout.slice(stdout.indexOf(delimiter) + 2));
 	};
 
