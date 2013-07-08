@@ -8,7 +8,7 @@ module.exports = function (cb) {
 		cb(error, parseResult(stdout));
 	};
 	var parseResult = function (input) {
-		return input.slice(input.indexOf(delimiter) + 2);
+		return input.slice(input.indexOf(delimiter) + 2).trim();
 	};
 
 	switch (process.platform) {
