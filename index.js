@@ -5,7 +5,10 @@ var exec = require('child_process').exec;
 module.exports = function (cb) {
 	var delimiter = ': ';
 	var stdoutHandler = function (error, stdout) {
-		cb(error, stdout.slice(stdout.indexOf(delimiter) + 2));
+		cb(error, parseResult(stdout));
+	};
+	var parseResult = function (input) {
+		return input.slice(input.indexOf(delimiter) + 2);
 	};
 
 	switch (process.platform) {
@@ -21,7 +24,13 @@ module.exports = function (cb) {
 
 	case 'linux':
 	case 'freebsd':
-		exec('dmidecode -t system | grep \'Serial\'', stdoutHandler);
+		exec('dmidecode -t system | grep \'Serial\'', function (error, stdout) {
+			if (error || parseResult(stdout).length > 1) {
+				stdoutHandler(error, stdout);
+			} else  {
+				exec('dmidecode -t system | grep \'UUID\'', stdoutHandler);
+			}
+		});
 		break;
 	}
 };
