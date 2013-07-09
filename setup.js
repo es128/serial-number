@@ -8,7 +8,7 @@ var fail = function (err) {
 
 serialNumber(function (err) {
 	if (process.platform !== 'win32' && err.toString().match(/Permission denied/i)) {
-		console.info(
+		[
 			'\x1B[7m' + // inverse style
 			'Your system requires root/administrative priviledge to access the serial number.' +
 			'\x1B[27m',
@@ -20,7 +20,7 @@ serialNumber(function (err) {
 			'\x1B[31m' + // red
 			'You will be prompted for password.' +
 			'\x1B[39m'
-		);
+		].forEach(function (msg) {console.info(msg);});
 		serialNumber.useSudo(function (err, val) {
 			if (err) {return fail(err);}
 			require('fs').writeFile('cached', val, function (err) {
