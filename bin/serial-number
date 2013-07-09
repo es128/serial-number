@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var path = require('path');
+var fs = require('fs');
+
+var src = path.join(path.dirname(fs.realpathSync(__filename)), '..', 'index');
+
+require(src)(function (err, val) {
+	if (err) {throw new Error(err);}
+	console.log(val);
+});
