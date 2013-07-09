@@ -27,7 +27,7 @@ var serialNumber = function (cb, cmdPrefix) {
 	case 'freebsd':
 		exec(cmdPrefix + 'dmidecode -t system | grep \'Serial\'', function (error, stdout) {
 			if (error) {
-				require('fs').readFile('cached', function (fsErr, data) {
+				require('fs').readFile('cache', function (fsErr, data) {
 					if (data) {data = data.trim();}
 					if (fsErr || !data || data.length < 2) {
 						stdoutHandler(error, stdout);
