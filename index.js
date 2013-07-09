@@ -26,8 +26,17 @@ var serialNumber = function (cb, cmdPrefix) {
 	case 'linux':
 	case 'freebsd':
 		exec(cmdPrefix + 'dmidecode -t system | grep \'Serial\'', function (error, stdout) {
-			if (error || parseResult(stdout).length > 1) {
-				stdoutHandler(error, stdout);
+			if (error) {
+				require('fs').readFile('cached', function (fsErr, data) {
+					data = data.trim();
+					if (fsErr || data.length < 2) {
+						stdoutHandler(error, stdout);
+					} else {
+						cb(null, data);
+					}
+				});
+			} else if (parseResult(stdout).length > 1) {
+				stdoutHandler(null, stdout);
 			} else  {
 				exec(cmdPrefix + 'dmidecode -t system | grep \'UUID\'', stdoutHandler);
 			}
