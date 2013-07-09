@@ -19,7 +19,7 @@ serialNumber(function (err) {
 		].forEach(function (msg) {console.info(msg);});
 		serialNumber.useSudo(function (err, val) {
 			if (err) {return fail(err);}
-			require('fs').writeFile('cache', val, function (err) {
+			require('fs').writeFile(__dirname + '/cache', val, function (err) {
 				if (err) {
 					console.error('Could not write serial number cache file:', err);
 				} else {
