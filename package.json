@@ -1,6 +1,6 @@
 {
   "name": "serial-number",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Reads the machine's serial number (or service/asset tag)",
   "author": {
     "name": "Elan Shanker",
