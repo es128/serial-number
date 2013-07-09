@@ -1,11 +1,29 @@
 'use strict';
 
 var exec = require('child_process').exec;
+
 var serialNumber = function (cb, cmdPrefix) {
 	var delimiter = ': ';
-	var stdoutHandler = function (error, stdout) {
-		cb(error, parseResult(stdout));
+
+	var fromCache = function (error, stdout) {
+		require('fs').readFile(__dirname + '/cache', function (fsErr, data) {
+			if (data) {data = data.toString().trim();}
+			if (fsErr || !data || data.length < 2) {
+				stdoutHandler(error, stdout, true);
+			} else {
+				cb(null, data);
+			}
+		});
 	};
+
+	var stdoutHandler = function (error, stdout, bypassCache) {
+		if (error && !bypassCache) {
+			fromCache(error, stdout);
+		} else {
+			cb(error, parseResult(stdout));
+		}
+	};
+
 	var parseResult = function (input) {
 		return input.slice(input.indexOf(delimiter) + 2).trim();
 	};
@@ -26,17 +44,8 @@ var serialNumber = function (cb, cmdPrefix) {
 	case 'linux':
 	case 'freebsd':
 		exec(cmdPrefix + 'dmidecode -t system | grep \'Serial\'', function (error, stdout) {
-			if (error) {
-				require('fs').readFile(__dirname + '/cache', function (fsErr, data) {
-					if (data) {data = data.toString().trim();}
-					if (fsErr || !data || data.length < 2) {
-						stdoutHandler(error, stdout);
-					} else {
-						cb(null, data);
-					}
-				});
-			} else if (parseResult(stdout).length > 1) {
-				stdoutHandler(null, stdout);
+			if (error || parseResult(stdout).length > 1) {
+				stdoutHandler(error, stdout);
 			} else  {
 				exec(cmdPrefix + 'dmidecode -t system | grep \'UUID\'', stdoutHandler);
 			}
