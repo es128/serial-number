@@ -29,7 +29,7 @@ var serialNumber = function (cb, cmdPrefix) {
 			if (error || parseResult(stdout).length > 1) {
 				stdoutHandler(error, stdout);
 			} else  {
-				exec(this.cmdPrefix + 'dmidecode -t system | grep \'UUID\'', stdoutHandler);
+				exec(cmdPrefix + 'dmidecode -t system | grep \'UUID\'', stdoutHandler);
 			}
 		});
 		break;
