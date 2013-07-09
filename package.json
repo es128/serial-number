@@ -15,6 +15,9 @@
     "url": "https://github.com/es128/serial-number/issues"
   },
   "main": "./index",
+  "scripts": {
+    "postinstall": "node setup.js"
+  },
   "keywords": [
     "serial", "number", "serial-number", "asset", "service", "tag", "machine", "hardware", "dell"
   ],
