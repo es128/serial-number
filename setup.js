@@ -7,7 +7,7 @@ var fail = function (err) {
 };
 
 serialNumber(function (err) {
-	if (process.platform !== 'win32' && err.toString().match(/Permission denied/i)) {
+	if (process.platform !== 'win32' && err && err.toString().match(/Permission denied/i)) {
 		[
 			'\x1B[7m' + // inverse style
 			'Your system requires root/administrative priviledge to access the serial number.' +

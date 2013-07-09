@@ -28,8 +28,8 @@ var serialNumber = function (cb, cmdPrefix) {
 		exec(cmdPrefix + 'dmidecode -t system | grep \'Serial\'', function (error, stdout) {
 			if (error) {
 				require('fs').readFile('cached', function (fsErr, data) {
-					data = data.trim();
-					if (fsErr || data.length < 2) {
+					if (data) {data = data.trim();}
+					if (fsErr || !data || data.length < 2) {
 						stdoutHandler(error, stdout);
 					} else {
 						cb(null, data);
