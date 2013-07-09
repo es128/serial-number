@@ -1,8 +1,7 @@
 'use strict';
 
 var exec = require('child_process').exec;
-
-module.exports = function (cb) {
+var serialNumber = function (cb, cmdPrefix) {
 	var delimiter = ': ';
 	var stdoutHandler = function (error, stdout) {
 		cb(error, parseResult(stdout));
@@ -11,10 +10,12 @@ module.exports = function (cb) {
 		return input.slice(input.indexOf(delimiter) + 2).trim();
 	};
 
+	if (!cmdPrefix) {cmdPrefix = '';}
+
 	switch (process.platform) {
 
 	case 'darwin':
-		exec('system_profiler SPHardwareDataType | grep \'Serial\'', stdoutHandler);
+		exec(cmdPrefix + 'system_profiler SPHardwareDataType | grep \'Serial\'', stdoutHandler);
 		break;
 
 	case 'win32':
@@ -24,13 +25,19 @@ module.exports = function (cb) {
 
 	case 'linux':
 	case 'freebsd':
-		exec('dmidecode -t system | grep \'Serial\'', function (error, stdout) {
+		exec(cmdPrefix + 'dmidecode -t system | grep \'Serial\'', function (error, stdout) {
 			if (error || parseResult(stdout).length > 1) {
 				stdoutHandler(error, stdout);
 			} else  {
-				exec('dmidecode -t system | grep \'UUID\'', stdoutHandler);
+				exec(this.cmdPrefix + 'dmidecode -t system | grep \'UUID\'', stdoutHandler);
 			}
 		});
 		break;
 	}
+};
+
+module.exports = exports = serialNumber;
+
+exports.useSudo = function (cb) {
+	serialNumber(cb, 'sudo ');
 };
