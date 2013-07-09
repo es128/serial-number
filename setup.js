@@ -15,10 +15,6 @@ serialNumber(function (err) {
 
 			'\x1B[31m' + // red
 			'Attempting to run command with `sudo` and cache your serial for future use.' +
-			'\x1B[39m',
-
-			'\x1B[31m' + // red
-			'You will be prompted for password.' +
 			'\x1B[39m'
 		].forEach(function (msg) {console.info(msg);});
 		serialNumber.useSudo(function (err, val) {
