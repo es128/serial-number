@@ -3,7 +3,7 @@ Serial Number
 
 A simple Node.js module for accessing the serial number (a.k.a. Dell Service
 Tag, asset tag) of the local machine. Supports Linux, Mac (OS X), Windows, and
-FreeBSD.
+FreeBSD. On Amazon EC2 instances, it will return the instance-id.
 
 
 Installation
