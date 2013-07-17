@@ -1,12 +1,14 @@
 'use strict';
 
-var exec = require('child_process').exec;
+var fs		= require('fs');
+var http	= require('http');
+var exec	= require('child_process').exec;
 
 var serialNumber = function (cb, cmdPrefix) {
 	var delimiter = ': ';
 
 	var fromCache = function (error, stdout) {
-		require('fs').readFile(__dirname + '/cache', function (fsErr, data) {
+		fs.readFile(__dirname + '/cache', function (fsErr, data) {
 			if (data) {data = data.toString().trim();}
 			if (fsErr || !data || data.length < 2) {
 				attemptEC2(function() {
@@ -36,7 +38,7 @@ var serialNumber = function (cb, cmdPrefix) {
 			failCb();
 			failCb = function () {};
 		};
-		var request = require('http').get(
+		var request = http.get(
 			'http://169.254.169.254/latest/meta-data/instance-id',
 			function (res) {
 				res.on('data', function (chunk) {
