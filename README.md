@@ -30,4 +30,4 @@ serialNumber(function (err, value) {
 
 License
 -------
-MIT
+[MIT](https://raw.github.com/es128/serial-number/master/LICENSE)	
