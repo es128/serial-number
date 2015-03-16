@@ -55,30 +55,35 @@ var serialNumber = function (cb, cmdPrefix) {
 		request.on('error', failHandler).setTimeout(1000, failHandler);
 	};
 
-	if (!cmdPrefix) {cmdPrefix = '';}
+	cmdPrefix = cmdPrefix || '';
+	var cmd;
 
 	switch (process.platform) {
-
-	case 'darwin':
-		exec(cmdPrefix + 'system_profiler SPHardwareDataType | grep \'Serial\'', stdoutHandler);
-		break;
 
 	case 'win32':
 		delimiter = '\r\n';
 		exec('wmic csproduct get identifyingnumber', stdoutHandler);
+		return;
+
+	case 'darwin':
+		cmd = 'system_profiler SPHardwareDataType';
 		break;
 
 	case 'linux':
 	case 'freebsd':
-		exec(cmdPrefix + 'dmidecode -t system | grep \'Serial\'', function (error, stdout) {
-			if (error || parseResult(stdout).length > 1) {
-				stdoutHandler(error, stdout);
-			} else  {
-				exec(cmdPrefix + 'dmidecode -t system | grep \'UUID\'', stdoutHandler);
-			}
-		});
+		cmd = 'dmidecode -t system';
 		break;
 	}
+
+	if (!cmd) return cb(new Error('Cannot provide serial number for ' + process.platform));
+
+	exec(cmdPrefix + cmd + ' | grep \'Serial\'', function (error, stdout) {
+		if (error || parseResult(stdout).length > 1) {
+			stdoutHandler(error, stdout);
+		} else  {
+			exec(cmdPrefix + cmd + ' | grep \'UUID\'', stdoutHandler);
+		}
+	});
 };
 
 module.exports = exports = serialNumber;
