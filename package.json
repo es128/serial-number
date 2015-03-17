@@ -14,9 +14,8 @@
   "bugs": {
     "url": "https://github.com/es128/serial-number/issues"
   },
-  "main": "./index",
   "bin": {
-    "serial-number": "./bin/serial-number"
+    "serial-number": "bin/serial-number"
   },
   "scripts": {
     "postinstall": "node setup.js"
