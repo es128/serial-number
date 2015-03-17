@@ -79,6 +79,7 @@ var serialNumber = function (cb, cmdPrefix) {
 
 	if (!cmd) return cb(new Error('Cannot provide serial number for ' + process.platform));
 
+	if (serialNumber.preferUUID) vals.reverse();
 
 	exec(cmdPrefix + cmd + vals[0], function (error, stdout) {
 		if (error || parseResult(stdout).length > 1) {
@@ -88,6 +89,8 @@ var serialNumber = function (cb, cmdPrefix) {
 		}
 	});
 };
+
+serialNumber.preferUUID = false;
 
 module.exports = exports = serialNumber;
 
