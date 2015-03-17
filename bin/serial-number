@@ -5,9 +5,9 @@
 var path = require('path');
 var fs = require('fs');
 
-var src = path.join(path.dirname(fs.realpathSync(__filename)), '..', 'index');
+var serialNumber = require('../');
 
-require(src)(function (err, val) {
-	if (err) {throw new Error(err);}
+serialNumber(function (err, val) {
+	if (err) throw err;
 	console.log(val);
 });
