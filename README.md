@@ -27,6 +27,22 @@ serialNumber(function (err, value) {
 });
 ```
 
+If the serial number turns out to be invalid (common on VMs), the system's UUID
+value will be provided as a fallback. To instead try to get the UUID on the
+first attempt, set the `preferUUID` flag:
+
+```javascript
+serialNumber.preferUUID = true;
+```
+
+To prefix the system command with `sudo` use the `useSudo` method:
+
+```javascript
+serialNumber.useSudo(function (err, value) {
+	console.log(value);
+});
+```
+
 
 License
 -------
