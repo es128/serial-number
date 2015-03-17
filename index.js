@@ -65,7 +65,7 @@ var serialNumber = function (cb, cmdPrefix) {
 		delimiter = '\r\n';
 		vals[0] = 'IdentifyingNumber';
 		cmd = 'wmic csproduct get ';
-		return;
+		break;
 
 	case 'darwin':
 		cmd = 'system_profiler SPHardwareDataType | grep ';
