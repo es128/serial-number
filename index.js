@@ -56,32 +56,35 @@ var serialNumber = function (cb, cmdPrefix) {
 	};
 
 	cmdPrefix = cmdPrefix || '';
+	var vals = ['Serial', 'UUID'];
 	var cmd;
 
 	switch (process.platform) {
 
 	case 'win32':
 		delimiter = '\r\n';
-		exec('wmic csproduct get identifyingnumber', stdoutHandler);
+		vals[0] = 'IdentifyingNumber';
+		cmd = 'wmic csproduct get ';
 		return;
 
 	case 'darwin':
-		cmd = 'system_profiler SPHardwareDataType';
+		cmd = 'system_profiler SPHardwareDataType | grep ';
 		break;
 
 	case 'linux':
 	case 'freebsd':
-		cmd = 'dmidecode -t system';
+		cmd = 'dmidecode -t system | grep ';
 		break;
 	}
 
 	if (!cmd) return cb(new Error('Cannot provide serial number for ' + process.platform));
 
-	exec(cmdPrefix + cmd + ' | grep \'Serial\'', function (error, stdout) {
+
+	exec(cmdPrefix + cmd + vals[0], function (error, stdout) {
 		if (error || parseResult(stdout).length > 1) {
 			stdoutHandler(error, stdout);
-		} else  {
-			exec(cmdPrefix + cmd + ' | grep \'UUID\'', stdoutHandler);
+		} else {
+			exec(cmdPrefix + cmd + vals[1], stdoutHandler);
 		}
 	});
 };
