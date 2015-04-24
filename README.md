@@ -43,6 +43,20 @@ serialNumber.useSudo(function (err, value) {
 });
 ```
 
+For the CLI command it's just
+
+```sh
+$ serial-number
+A12B3C4DE5FG
+```
+
+or
+
+```sh
+$ serial-number --uuid
+1234AABB-C5DE-678F-G9HI-J01K2LM34N5A
+```
+
 
 License
 -------
