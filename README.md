@@ -57,7 +57,6 @@ $ serial-number --uuid
 1234AABB-C5DE-678F-G9HI-J01K2LM34N5A
 ```
 
-
 License
 -------
-[MIT](https://raw.github.com/es128/serial-number/master/LICENSE)	
+[ISC](https://raw.github.com/es128/serial-number/master/LICENSE)

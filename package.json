@@ -6,6 +6,7 @@
     "name": "Elan Shanker",
     "url": "http://github.com/es128"
   },
+  "license": "ISC",
   "homepage": "https://github.com/es128/serial-number",
   "repository": {
     "type": "git",
