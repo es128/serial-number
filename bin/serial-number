@@ -7,11 +7,16 @@ var fs = require('fs');
 
 var serialNumber = require('../');
 
-if (process.argv[process.argv.length - 1] === '--uuid') {
-	serialNumber.preferUUID = true;
-}
+var cmdprefix = '';
+process.argv.forEach(function(arg, index, arr) {
+    if (arg === '--uuid') {
+        serialNumber.preferUUID = true;
+    } else if (arg === '--cmdprefix') {
+        cmdprefix = arr[index + 1];
+    }
+});
 
 serialNumber(function (err, val) {
 	if (err) throw err;
 	console.log(val);
-});
+}, cmdprefix);
