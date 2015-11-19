@@ -50,10 +50,15 @@ $ serial-number
 A12B3C4DE5FG
 ```
 
-or
+The CLI provides a couple options:
+
+* `--uuid`: Equivalent to the `preferUUID` setting as above.
+* `--cmdprefix <prefix>`: Sets a string to be prefixed ahead of the shell
+command to be run. Can be used to specify a path to the `dmidecode` binary on
+\*nix systems if it won't be found in the environment `$PATH`
 
 ```sh
-$ serial-number --uuid
+$ serial-number --uuid --cmdprefix "/usr/sbin/"
 1234AABB-C5DE-678F-G9HI-J01K2LM34N5A
 ```
 
