@@ -7,15 +7,14 @@ var fs = require('fs');
 
 var serialNumber = require('../');
 
-var cmdprefix = '/usr/sbin/';
-if (process.argv[process.argv.length - 1] === '--uuid') {
-	serialNumber.preferUUID = true;
-    if (process.argv[process.argv.length - 2].indexOf('--cmdprefix') > -1) {
-        cmdprefix = (process.argv[process.argv.length - 2]).split("=")[1];
+var cmdprefix = '';
+process.argv.forEach(function(arg, index, arr) {
+    if (arg === '--uuid') {
+        serialNumber.preferUUID = true;
+    } else if (arg === '--cmdprefix') {
+        cmdprefix = arr[index + 1];
     }
-} else if (process.argv[process.argv.length - 1].indexOf('--cmdprefix') > -1) {
-    cmdprefix = (process.argv[process.argv.length - 1]).split("=")[1];
-}
+});
 
 serialNumber(function (err, val) {
 	if (err) throw err;
