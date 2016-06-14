@@ -80,10 +80,11 @@ var serialNumber = function (cb, cmdPrefix) {
 			cmd = 'dmidecode -t system | grep ';	
 		}
 		break;
-	}
 	
 	case 'freebsd':
 		cmd = 'dmidecode -t system | grep ';
+		break;
+	}
 
 	if (!cmd) return cb(new Error('Cannot provide serial number for ' + process.platform));
 
