@@ -71,9 +71,9 @@ var serialNumber = function (cb, cmdPrefix) {
 		cmd = 'system_profiler SPHardwareDataType | grep ';
 		break;
 
-	case 'freebsd':
 	case 'linux':
 		if (process.arch === 'arm') {
+			vals[1] = 'Serial';
 			cmd = 'cat /proc/cpuinfo | grep ';
 			
 		} else {
@@ -81,6 +81,9 @@ var serialNumber = function (cb, cmdPrefix) {
 		}
 		break;
 	}
+	
+	case 'freebsd':
+		cmd = 'dmidecode -t system | grep ';
 
 	if (!cmd) return cb(new Error('Cannot provide serial number for ' + process.platform));
 
