@@ -71,9 +71,14 @@ var serialNumber = function (cb, cmdPrefix) {
 		cmd = 'system_profiler SPHardwareDataType | grep ';
 		break;
 
-	case 'linux':
 	case 'freebsd':
-		cmd = 'dmidecode -t system | grep ';
+	case 'linux':
+		if (process.arch === 'arm') {
+			cmd = 'cat /proc/cpuinfo | grep ';
+			
+		} else {
+			cmd = 'dmidecode -t system | grep ';	
+		}
 		break;
 	}
 
