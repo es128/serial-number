@@ -72,10 +72,18 @@ var serialNumber = function (cb, cmdPrefix) {
 		break;
 
 	case 'linux':
-	case 'freebsd':
-		cmd = 'dmidecode -t system | grep ';
+		if (process.arch === 'arm') {
+			vals[1] = 'Serial';
+			cmd = 'cat /proc/cpuinfo | grep ';
+			
+		} else {
+			cmd = 'dmidecode -t system | grep ';	
+		}
 		break;
 	}
+	
+	case 'freebsd':
+		cmd = 'dmidecode -t system | grep ';
 
 	if (!cmd) return cb(new Error('Cannot provide serial number for ' + process.platform));
 
