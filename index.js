@@ -29,7 +29,13 @@ var serialNumber = function (cb, cmdPrefix) {
 	};
 
 	var parseResult = function (input) {
-		return input.slice(input.indexOf(delimiter) + 2).trim();
+		result = input.slice(input.indexOf(delimiter) + 2).trim();
+
+		if (result === 'To be filled by O.E.M.') {
+			return '';
+		}
+
+		return result;
 	};
 
 	var attemptEC2 = function (failCb) {
@@ -75,12 +81,12 @@ var serialNumber = function (cb, cmdPrefix) {
 		if (process.arch === 'arm') {
 			vals[1] = 'Serial';
 			cmd = 'cat /proc/cpuinfo | grep ';
-			
+
 		} else {
-			cmd = 'dmidecode -t system | grep ';	
+			cmd = 'dmidecode -t system | grep ';
 		}
 		break;
-	
+
 	case 'freebsd':
 		cmd = 'dmidecode -t system | grep ';
 		break;
