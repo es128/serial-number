@@ -32,7 +32,7 @@ var serialNumber = function (cb, cmdPrefix) {
 	};
 
 	var parseResult = function (input) {
-		result = input.slice(input.indexOf(delimiter) + 2).trim();
+		var result = input.slice(input.indexOf(delimiter) + 2).trim();
 
 		var isResultUseless = uselessSerials.some(function(val) {
 			return val === result;
