@@ -6,6 +6,9 @@ var exec	= require('child_process').exec;
 
 var serialNumber = function (cb, cmdPrefix) {
 	var delimiter = ': ';
+	var uselessSerials = [
+		'To be filled by O.E.M.',
+	]
 
 	var fromCache = function (error, stdout) {
 		fs.readFile(__dirname + '/cache', function (fsErr, data) {
@@ -29,7 +32,17 @@ var serialNumber = function (cb, cmdPrefix) {
 	};
 
 	var parseResult = function (input) {
-		return input.slice(input.indexOf(delimiter) + 2).trim();
+		var result = input.slice(input.indexOf(delimiter) + 2).trim();
+
+		var isResultUseless = uselessSerials.some(function(val) {
+			return val === result;
+		});
+
+		if (isResultUseless) {
+			return '';
+		}
+
+		return result;
 	};
 
 	var attemptEC2 = function (failCb) {
@@ -75,12 +88,12 @@ var serialNumber = function (cb, cmdPrefix) {
 		if (process.arch === 'arm') {
 			vals[1] = 'Serial';
 			cmd = 'cat /proc/cpuinfo | grep ';
-			
+
 		} else {
-			cmd = 'dmidecode -t system | grep ';	
+			cmd = 'dmidecode -t system | grep ';
 		}
 		break;
-	
+
 	case 'freebsd':
 		cmd = 'dmidecode -t system | grep ';
 		break;
