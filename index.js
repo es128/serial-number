@@ -6,6 +6,9 @@ var exec	= require('child_process').exec;
 
 var serialNumber = function (cb, cmdPrefix) {
 	var delimiter = ': ';
+	var uselessSerials = [
+		'To be filled by O.E.M.',
+	]
 
 	var fromCache = function (error, stdout) {
 		fs.readFile(__dirname + '/cache', function (fsErr, data) {
@@ -31,7 +34,7 @@ var serialNumber = function (cb, cmdPrefix) {
 	var parseResult = function (input) {
 		result = input.slice(input.indexOf(delimiter) + 2).trim();
 
-		if (result === 'To be filled by O.E.M.') {
+		if (result in uselessSerials) {
 			return '';
 		}
 
