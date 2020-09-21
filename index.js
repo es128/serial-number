@@ -2,7 +2,7 @@
 
 var fs		= require('fs');
 var http	= require('http');
-var exec	= require('child_process').exec;
+var execFile	= require('child_process').execFile;
 
 var serialNumber = function (cb, cmdPrefix) {
 	var delimiter = ': ';
@@ -45,6 +45,32 @@ var serialNumber = function (cb, cmdPrefix) {
 		return result;
 	};
 
+	var filterOutput = function (input, search) {
+		var result = [];
+		input = input.split('\n').filter(i => i);
+		input.forEach( line => {
+			if(line.includes(search))result.push(line);
+		});
+		return result.join('\n');
+	};
+
+	var execCmd = function (cmdPrefix, cmd, val, callback) {
+		if (cmdPrefix.endsWith(' ')) {	// If ends with space is treated as a comand, like sudo
+			var cmdArgs = cmd;
+			cmd = cmdPrefix.trim();
+		} else {							// Else path, apend
+			var cmdArgs = cmd.slice(1);
+			cmd = cmdPrefix + cmd[0];
+		}
+		if (process.platform == 'win32') {
+			args.push(val);
+		}
+		execFile(cmd, cmdArgs, (error, stdout) => {
+			if(process.platform != 'win32') stdout = filterOutput(stdout, val);
+			if(callback) callback(error, stdout);
+		});
+	}
+
 	var attemptEC2 = function (failCb) {
 		var data = '';
 		var failHandler = function () {
@@ -77,25 +103,25 @@ var serialNumber = function (cb, cmdPrefix) {
 	case 'win32':
 		delimiter = '\r\n';
 		vals[0] = 'IdentifyingNumber';
-		cmd = 'wmic csproduct get ';
+		cmd = ['wmic', 'csproduct', 'get'];
 		break;
 
 	case 'darwin':
-		cmd = 'system_profiler SPHardwareDataType | grep ';
+		cmd = ['system_profiler', 'SPHardwareDataType'];
 		break;
 
 	case 'linux':
 		if (process.arch === 'arm') {
 			vals[1] = 'Serial';
-			cmd = 'cat /proc/cpuinfo | grep ';
+			cmd = ['cat', '/proc/cpuinfo'];
 
 		} else {
-			cmd = 'dmidecode -t system | grep ';
+			cmd = ['dmidecode', '-t', 'system'];
 		}
 		break;
 
 	case 'freebsd':
-		cmd = 'dmidecode -t system | grep ';
+		cmd = ['dmidecode', '-t', 'system'];
 		break;
 	}
 
@@ -103,11 +129,11 @@ var serialNumber = function (cb, cmdPrefix) {
 
 	if (serialNumber.preferUUID) vals.reverse();
 
-	exec(cmdPrefix + cmd + vals[0], function (error, stdout) {
+	execCmd(cmdPrefix, cmd, vals[0], (error, stdout) => {
 		if (error || parseResult(stdout).length > 1) {
 			stdoutHandler(error, stdout);
 		} else {
-			exec(cmdPrefix + cmd + vals[1], stdoutHandler);
+			execCmd(cmdPrefix, cmd, vals[1], stdoutHandler);
 		}
 	});
 };
