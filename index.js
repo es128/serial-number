@@ -3,6 +3,7 @@
 var fs		= require('fs');
 var http	= require('http');
 var execFile	= require('child_process').execFile;
+var spawn	= require('child_process').spawn;
 
 var serialNumber = function (cb, cmdPrefix) {
 	var delimiter = ': ';
@@ -45,15 +46,6 @@ var serialNumber = function (cb, cmdPrefix) {
 		return result;
 	};
 
-	var filterOutput = function (input, search) {
-		var result = [];
-		input = input.split('\n').filter(i => i);
-		input.forEach( line => {
-			if(line.includes(search))result.push(line);
-		});
-		return result.join('\n');
-	};
-
 	var execCmd = function (cmdPrefix, cmd, val, callback) {
 		if (cmdPrefix.endsWith(' ')) {	// If ends with space is treated as a comand, like sudo
 			var cmdArgs = cmd;
@@ -64,11 +56,40 @@ var serialNumber = function (cb, cmdPrefix) {
 		}
 		if (process.platform == 'win32') {
 			args.push(val);
+			execFile(cmd, cmdArgs, (error, stdout) => {
+				if(callback) callback(error, stdout);
+			});
+		} else { // If not win32 use spawn for grep
+			let stdout = '';
+			let stderr = '';
+			const spCmd1 = spawn(cmd, cmdArgs);
+			const spCmd2 = spawn('grep', [val]);
+
+			spCmd1.stdout.on('data', (data) => {
+				spCmd2.stdin.write(data);
+			});
+			spCmd1.stderr.on('data', (data) => {
+				stderr += data;
+			});
+			spCmd1.on('close', (code) => {
+				if (code !== 0) {
+					console.error(`${cmd1} process exited with code ${code}`);
+				}
+				spCmd2.stdin.end();
+			});
+			spCmd2.stdout.on('data', (data) => {
+				stdout += data.toString();
+			});
+			spCmd2.stderr.on('data', (data) => {
+				stderr+= data;
+			});
+			spCmd2.on('close', (code) => {
+			if (code !== 0) {
+				console.error(`${cmd2} process exited with code ${code}`);
+			}
+				if(callback) callback(stderr, stdout);
+  			});
 		}
-		execFile(cmd, cmdArgs, (error, stdout) => {
-			if(process.platform != 'win32') stdout = filterOutput(stdout, val);
-			if(callback) callback(error, stdout);
-		});
 	}
 
 	var attemptEC2 = function (failCb) {
