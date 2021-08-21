@@ -11,6 +11,10 @@ var serialNumber = function (cb, cmdPrefix) {
 		'System Serial Number',
 		'Default string',
 		'Not Applicable',
+		'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF',
+		'03000200-0400-0500-0006-000700080009',
+		'123456789',
+		'Not Settable'
 	]
 
 	var fromCache = function (error, stdout) {
