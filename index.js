@@ -14,6 +14,7 @@ var serialNumber = function (cb, cmdPrefix) {
 		'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF',
 		'03000200-0400-0500-0006-000700080009',
 		'123456789',
+		'0123456789',
 		'Not Settable'
 	]
 
