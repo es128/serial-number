@@ -8,6 +8,14 @@ var serialNumber = function (cb, cmdPrefix) {
 	var delimiter = ': ';
 	var uselessSerials = [
 		'To be filled by O.E.M.',
+		'System Serial Number',
+		'Default string',
+		'Not Applicable',
+		'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF',
+		'03000200-0400-0500-0006-000700080009',
+		'123456789',
+		'0123456789',
+		'Not Settable'
 	]
 
 	var fromCache = function (error, stdout) {
@@ -35,7 +43,7 @@ var serialNumber = function (cb, cmdPrefix) {
 		var result = input.slice(input.indexOf(delimiter) + 2).trim();
 
 		var isResultUseless = uselessSerials.some(function(val) {
-			return val === result;
+			return val.toLowerCase() === result.toLowerCase();
 		});
 
 		if (isResultUseless) {
