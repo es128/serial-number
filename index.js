@@ -85,7 +85,7 @@ var serialNumber = function (cb, cmdPrefix) {
 		break;
 
 	case 'linux':
-		if (process.arch === 'arm') {
+		if (process.arch === 'arm' || process.arch === 'arm64') {
 			vals[1] = 'Serial';
 			cmd = 'cat /proc/cpuinfo | grep ';
 
