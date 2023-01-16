@@ -1,8 +1,8 @@
 'use strict';
 
-var fs		= require('fs');
-var http	= require('http');
-var exec	= require('child_process').exec;
+var fs = require('fs');
+var http = require('http');
+var exec = require('child_process').exec;
 
 var serialNumber = function (cb, cmdPrefix) {
 	var delimiter = ': ';
@@ -12,9 +12,9 @@ var serialNumber = function (cb, cmdPrefix) {
 
 	var fromCache = function (error, stdout) {
 		fs.readFile(__dirname + '/cache', function (fsErr, data) {
-			if (data) {data = data.toString().trim();}
+			if (data) { data = data.toString().trim(); }
 			if (fsErr || !data || data.length < 2) {
-				attemptEC2(function() {
+				attemptEC2(function () {
 					stdoutHandler(error, stdout, true);
 				});
 			} else {
@@ -32,9 +32,9 @@ var serialNumber = function (cb, cmdPrefix) {
 	};
 
 	var parseResult = function (input) {
-		var result = input.slice(input.indexOf(delimiter) + 2).trim();
+		var result = input.slice(input.indexOf(delimiter) + delimiter.length).trim();
 
-		var isResultUseless = uselessSerials.some(function(val) {
+		var isResultUseless = uselessSerials.some(function (val) {
 			return val === result;
 		});
 
@@ -49,7 +49,7 @@ var serialNumber = function (cb, cmdPrefix) {
 		var data = '';
 		var failHandler = function () {
 			failCb();
-			failCb = function () {};
+			failCb = function () { };
 		};
 		var request = http.get(
 			'http://169.254.169.254/latest/meta-data/instance-id',
@@ -74,29 +74,29 @@ var serialNumber = function (cb, cmdPrefix) {
 
 	switch (process.platform) {
 
-	case 'win32':
-		delimiter = '\r\n';
-		vals[0] = 'IdentifyingNumber';
-		cmd = 'wmic csproduct get ';
-		break;
+		case 'win32':
+			delimiter = '';
+			vals[0] = '';
+			cmd = 'Get-CimInstance -ClassName Win32_BIOS -Property SerialNumber | Select - Object - ExpandProperty SerialNumber';
+			break;
 
-	case 'darwin':
-		cmd = 'system_profiler SPHardwareDataType | grep ';
-		break;
+		case 'darwin':
+			cmd = 'system_profiler SPHardwareDataType | grep ';
+			break;
 
-	case 'linux':
-		if (process.arch === 'arm') {
-			vals[1] = 'Serial';
-			cmd = 'cat /proc/cpuinfo | grep ';
+		case 'linux':
+			if (process.arch === 'arm') {
+				vals[1] = 'Serial';
+				cmd = 'cat /proc/cpuinfo | grep ';
 
-		} else {
+			} else {
+				cmd = 'dmidecode -t system | grep ';
+			}
+			break;
+
+		case 'freebsd':
 			cmd = 'dmidecode -t system | grep ';
-		}
-		break;
-
-	case 'freebsd':
-		cmd = 'dmidecode -t system | grep ';
-		break;
+			break;
 	}
 
 	if (!cmd) return cb(new Error('Cannot provide serial number for ' + process.platform));
