@@ -77,6 +77,7 @@ var serialNumber = function (cb, cmdPrefix) {
 		case 'win32':
 			delimiter = '';
 			vals[0] = '';
+			vals[1] = '';
 			cmd = 'Get-CimInstance -ClassName Win32_BIOS -Property SerialNumber | Select-Object -ExpandProperty SerialNumber';
 			break;
 
