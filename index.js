@@ -71,10 +71,12 @@ var serialNumber = function (cb, cmdPrefix) {
 	cmdPrefix = cmdPrefix || '';
 	var vals = ['Serial', 'UUID'];
 	var cmd;
+	var shell = {};
 
 	switch (process.platform) {
 
 		case 'win32':
+			shell = { 'shell': 'powershell.exe' }
 			delimiter = '';
 			vals[0] = '';
 			vals[1] = '';
@@ -104,7 +106,7 @@ var serialNumber = function (cb, cmdPrefix) {
 
 	if (serialNumber.preferUUID) vals.reverse();
 
-	exec(cmdPrefix + cmd + vals[0], function (error, stdout) {
+	exec(cmdPrefix + cmd + vals[0], shell, function (error, stdout) {
 		if (error || parseResult(stdout).length > 1) {
 			stdoutHandler(error, stdout);
 		} else {
